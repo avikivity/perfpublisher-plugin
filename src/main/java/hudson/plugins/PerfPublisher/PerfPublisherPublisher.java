@@ -168,16 +168,24 @@ public class PerfPublisherPublisher extends HealthPublisher implements MatrixAgg
 		if (files.length > 1) {
 			logger.println("[CapsAnalysis] Multiple reports detected.");
 		}
+
 		ArrayList<String> filesToParse = new ArrayList<String>();
 		for (int i = 0; i < files.length; i++) {
-			FileSet fileSet = new FileSet();
-			File workspace = new File(build.getWorkspace().toURI());
+//			FileSet fileSet = new FileSet();
+//			FilePath workspace = new FilePath(build.getWorkspace().toURI());
 			
-			fileSet.setDir(workspace);
-			fileSet.setIncludes(files[i].trim());
-			Project antProject = new Project();
-			fileSet.setProject(antProject);
-			String[] tmp_files = fileSet.getDirectoryScanner(antProject).getIncludedFiles();
+//			fileSet.setDir(workspace);
+//			fileSet.setIncludes(files[i].trim());
+//			Project antProject = new Project();
+//			fileSet.setProject(antProject);
+//			String[] tmp_files = fileSet.getDirectoryScanner(antProject).getIncludedFiles();
+			if (build.getProject().getWorkspace().child(files[i]).exists()) {
+					filesToParse.add(files[i]);
+				} else {
+					logger.println("[CapsAnalysis] Impossible to analyse report " + files[i] + " file not found!");
+					build.setResult(Result.UNSTABLE);
+				}
+			/*
 			for (int j=0; j<tmp_files.length; j++) {
 				if (build.getProject().getWorkspace().child(tmp_files[j]).exists()) {
 					filesToParse.add(tmp_files[j]);
@@ -186,6 +194,7 @@ public class PerfPublisherPublisher extends HealthPublisher implements MatrixAgg
 					build.setResult(Result.UNSTABLE);
 				}
 			}
+			*/
 		}
 
 		try {

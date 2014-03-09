@@ -505,12 +505,12 @@ public class ParserXml {
 
 	// Attribute
 	private static Report resultat;
-	private static URI xml_path;
+	private static InputStream xml_path;
 	private static Collection<String> metrics;
 	/**
 	 * @param xml URI Path to the xml file
 	 */
-	public ParserXml(final URI xml, Collection<String> metrics) {
+	public ParserXml(final InputStream xml, Collection<String> metrics) {
 		this.resultat = new Report();
 		this.xml_path = xml;
 		this.metrics = metrics;
@@ -527,7 +527,7 @@ public class ParserXml {
 		final SAXParserFactory fabrique = SAXParserFactory.newInstance();
 		final SAXParser parseur = fabrique.newSAXParser();
 		final DefaultHandler gestionnaire = new Analyse(metrics);
-		parseur.parse(new File(xml_path), gestionnaire);
+		parseur.parse(xml_path, gestionnaire);
 	}
 
 	/**

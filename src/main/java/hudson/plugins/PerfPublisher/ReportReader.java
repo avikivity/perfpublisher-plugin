@@ -41,12 +41,12 @@ public class ReportReader {
 	 * @throws PerfPublisherParseException
 	 *             Thrown if the parsing fails.
 	 */
-	public ReportReader(URI is, PrintStream logger, Map<String, String> metrics) {
+	public ReportReader(InputStream is, PrintStream logger, Map<String, String> metrics) {
 		hudsonConsoleWriter = logger;
 		parse(is, metrics.values());
 	}
 
-	private void parse(URI is, Collection<String> metrics) {
+	private void parse(InputStream is, Collection<String> metrics) {
 		if (is == null) {
 			throw new PerfPublisherParseException("Empty input stream");
 		}

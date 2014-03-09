@@ -52,6 +52,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import  java.io.ByteArrayInputStream;
 import java.lang.reflect.Array;
 import java.net.URI;
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+
 
 import org.apache.commons.lang.StringUtils;
 
@@ -147,9 +149,11 @@ public class PerfPublisherBuildAction extends AbstractPerfPublisherAction
 		
 		for (int i = 0; i < files.size(); i++) {
 			String current_report = files.get(i);
-			URI is;
+			InputStream is;
 			try {
-				is = build.getWorkspace().child(current_report).toURI();
+				//is = build.getWorkspace().child(current_report).toURI();
+
+				is = new ByteArrayInputStream(build.getWorkspace().child(current_report).readToString().getBytes("UTF-8"));
 				
 				logger.println("[PerfPublisher] Parsing du Report : "
 						+ current_report);
@@ -162,11 +166,14 @@ public class PerfPublisherBuildAction extends AbstractPerfPublisherAction
 				logger.println("[PerfPublisher] Impossible to analyse report "
 						+ current_report + ", file can't be read.");
 				build.setResult(Result.UNSTABLE);
-			} catch (InterruptedException e) {
+			}
+			/*
+			catch (InterruptedException e) {
 				logger.println("[PerfPublisher] Impossible to analyse report "
 						+ current_report + ", file can't be read.");
 				build.setResult(Result.UNSTABLE);
 			}
+			*/
 			if (healthDescriptor.getUnstableHealth() > 0
 					&& reports.getNumberOfFailedTest() > healthDescriptor
 							.getUnstableHealth()) {
